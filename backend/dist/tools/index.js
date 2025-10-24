@@ -1,6 +1,5 @@
 import { tool } from 'ai';
 import { z } from "zod";
-// Define tools that work with AI SDK 5
 export const createFile = tool({
     description: 'Create a file at a certain directory',
     inputSchema: z.object({
@@ -8,8 +7,7 @@ export const createFile = tool({
         content: z.string().describe('Content of the file'),
     }),
     execute: async ({ location, content }) => {
-        // This will be handled by the tool execution in the main file
-        return `File '${location}' created successfully.`;
+        return `File '${location}' would be created with content.`;
     },
 });
 export const updateFile = tool({
@@ -19,7 +17,7 @@ export const updateFile = tool({
         content: z.string().describe('New content of the file'),
     }),
     execute: async ({ location, content }) => {
-        return `File '${location}' updated successfully.`;
+        return `File '${location}' would be updated with new content.`;
     },
 });
 export const deleteFile = tool({
@@ -28,7 +26,7 @@ export const deleteFile = tool({
         location: z.string().describe('Relative path to the file or directory'),
     }),
     execute: async ({ location }) => {
-        return `File/Directory '${location}' deleted successfully.`;
+        return `File/Directory '${location}' would be deleted.`;
     },
 });
 export const readFile = tool({
@@ -37,7 +35,7 @@ export const readFile = tool({
         location: z.string().describe('Relative path to the file'),
     }),
     execute: async ({ location }) => {
-        return `Content of '${location}' would be read here.`;
+        return `Content of '${location}' would be read.`;
     },
 });
 export const runCommand = tool({
@@ -46,10 +44,9 @@ export const runCommand = tool({
         command: z.string().describe('The shell command to execute'),
     }),
     execute: async ({ command }) => {
-        return `Command '${command}' would be executed here.`;
+        return `Command '${command}' would be executed.`;
     },
 });
-// Export all tools as an object
 export const tools = {
     createFile,
     updateFile,

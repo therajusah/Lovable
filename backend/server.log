@@ -4,7 +4,7 @@
 
 Server is running on port 3002
 Make sure to set V0_API_KEY, OPENAI_API_KEY and E2B_API_KEY in your .env file
-Creating sandbox from template iigcaz28v99qoyhuqm1j...
+Creating sandbox from template xrthwuaqmvroiv12y4u6...
 Sandbox created successfully
 LLM finished processing. Final Text output: 
 Sandbox closed

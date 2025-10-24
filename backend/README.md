@@ -40,7 +40,7 @@ import "dotenv/config";
 import { Sandbox } from "e2b";
 
 // Create a Sandbox from V1 template (React/Vite environment)
-const sandbox = await Sandbox.create("iigcaz28v99qoyhuqm1j");
+const sandbox = await Sandbox.create("73bu50moaayy3jt8ftpv");
 
 // Create a Sandbox from V2 development template
 const sandbox = await Sandbox.create("lovable");

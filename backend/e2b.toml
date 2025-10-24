@@ -1,16 +1,16 @@
 # This is a config for E2B sandbox template.
-# You can use template ID (iigcaz28v99qoyhuqm1j) to create a sandbox:
+# You can use template ID (1axn30rortnj6c7uptx9) to create a sandbox:
 
 # Python SDK
 # from e2b import Sandbox, AsyncSandbox
-# sandbox = Sandbox.create("iigcaz28v99qoyhuqm1j") # Sync sandbox
-# sandbox = await AsyncSandbox.create("iigcaz28v99qoyhuqm1j") # Async sandbox
+# sandbox = Sandbox.create("1axn30rortnj6c7uptx9") # Sync sandbox
+# sandbox = await AsyncSandbox.create("1axn30rortnj6c7uptx9") # Async sandbox
 
 # JS SDK
 # import { Sandbox } from 'e2b'
-# const sandbox = await Sandbox.create('iigcaz28v99qoyhuqm1j')
+# const sandbox = await Sandbox.create('1axn30rortnj6c7uptx9')
 
 team_id = "4e5a774b-2817-4dfe-b4eb-13e8d4217b49"
-start_cmd = "npm run dev"
+start_cmd = "cd react-app && npm run dev"
 dockerfile = "e2b.Dockerfile"
-template_id = "iigcaz28v99qoyhuqm1j"
+template_id = "1axn30rortnj6c7uptx9"
