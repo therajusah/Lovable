@@ -35,16 +35,10 @@ app.post("/prompt", async (req, res) => {
         const google = createGoogleGenerativeAI({
             apiKey: process.env.GOOGLE_API_KEY,
         });
-        console.log('=== DEBUG INFO ===');
-        console.log('User prompt:', prompt);
-        console.log('System prompt length:', SYSTEM_PROMPT.length);
-        console.log('Google API key exists:', !!process.env.GOOGLE_API_KEY);
-        console.log('E2B API key exists:', !!process.env.E2B_API_KEY);
-        console.log('==================');
         let textStream;
         try {
             textStream = streamText({
-                model: google('gemini-2.0-flash'),
+                model: google('gemini-2.5-flash'),
                 tools: tools,
                 toolChoice: 'auto',
                 messages: [

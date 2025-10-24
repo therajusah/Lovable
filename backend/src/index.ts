@@ -56,7 +56,7 @@ app.post("/prompt", async (req, res) => {
         let textStream;
         try {
             textStream = streamText({
-                model: google('gemini-2.0-flash'),
+                model: google('gemini-2.5-flash'),
                 tools: tools,
                 toolChoice: 'auto',
                 messages: [
