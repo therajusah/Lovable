@@ -52,20 +52,29 @@ app.post("/prompt", async (req, res) => {
             apiKey: process.env.GOOGLE_API_KEY!,
         });
 
-        const textStream = streamText({
-            model: google('gemini-2.0-flash'),
-            tools: tools,
-            messages: [
-                {
-                    role: "system",
-                    content: SYSTEM_PROMPT
-                },
-                {
-                    role: "user",
-                    content: prompt
-                }
-            ]
-        });
+
+        let textStream;
+        try {
+            textStream = streamText({
+                model: google('gemini-2.0-flash'),
+                tools: tools,
+                toolChoice: 'auto',
+                messages: [
+                    {
+                        role: "system",
+                        content: SYSTEM_PROMPT
+                    },
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ]
+            });
+            console.log('AI stream created successfully');
+        } catch (aiError) {
+            console.error('Error creating AI stream:', aiError);
+            throw aiError;
+        }
 
         
 
@@ -79,6 +88,7 @@ app.post("/prompt", async (req, res) => {
             if (delta.type === 'text-delta') {
                 finalResponseText += delta.text;
                 res.write(delta.text);
+                console.log('AI text delta:', delta.text);
             } else if (delta.type === 'tool-call') {
                 console.log(`Tool call: ${delta.toolName} with input:`, delta.input);
                 

@@ -3,7 +3,7 @@ import { z } from "zod";
 export const createFile = tool({
     description: 'Create a file at a certain directory',
     inputSchema: z.object({
-        location: z.string().describe('Relative path to the file (e.g., src/components/Button.tsx)'),
+        location: z.string().describe('Relative path to the file (e.g., src/components/Button.jsx)'),
         content: z.string().describe('Content of the file'),
     }),
     execute: async ({ location, content }) => {

@@ -35,20 +35,35 @@ app.post("/prompt", async (req, res) => {
         const google = createGoogleGenerativeAI({
             apiKey: process.env.GOOGLE_API_KEY,
         });
-        const textStream = streamText({
-            model: google('gemini-2.0-flash'),
-            tools: tools,
-            messages: [
-                {
-                    role: "system",
-                    content: SYSTEM_PROMPT
-                },
-                {
-                    role: "user",
-                    content: prompt
-                }
-            ]
-        });
+        console.log('=== DEBUG INFO ===');
+        console.log('User prompt:', prompt);
+        console.log('System prompt length:', SYSTEM_PROMPT.length);
+        console.log('Google API key exists:', !!process.env.GOOGLE_API_KEY);
+        console.log('E2B API key exists:', !!process.env.E2B_API_KEY);
+        console.log('==================');
+        let textStream;
+        try {
+            textStream = streamText({
+                model: google('gemini-2.0-flash'),
+                tools: tools,
+                toolChoice: 'auto',
+                messages: [
+                    {
+                        role: "system",
+                        content: SYSTEM_PROMPT
+                    },
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ]
+            });
+            console.log('AI stream created successfully');
+        }
+        catch (aiError) {
+            console.error('Error creating AI stream:', aiError);
+            throw aiError;
+        }
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
         res.setHeader('Transfer-Encoding', 'chunked');
         let finalResponseText = '';
@@ -56,6 +71,7 @@ app.post("/prompt", async (req, res) => {
             if (delta.type === 'text-delta') {
                 finalResponseText += delta.text;
                 res.write(delta.text);
+                console.log('AI text delta:', delta.text);
             }
             else if (delta.type === 'tool-call') {
                 console.log(`Tool call: ${delta.toolName} with input:`, delta.input);
