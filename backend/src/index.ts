@@ -56,7 +56,7 @@ app.post("/prompt", async (req, res) => {
         let textStream;
         try {
             textStream = streamText({
-                model: google('gemini-2.5-flash'),
+                model: google('gemini-2.5-pro'),
                 tools: tools,
                 toolChoice: 'auto',
                 messages: [
@@ -148,76 +148,6 @@ app.post("/prompt", async (req, res) => {
     }
 });
 
-app.post("/init-vite-react", async (req, res) => {
-    let sandbox: Sandbox | null = null;
-  
-    try {
-      console.log(`Creating sandbox from template ${TEMPLATE_ID}...`);
-      sandbox = await Sandbox.create(TEMPLATE_ID);
-      console.log(`Sandbox created successfully`);
-  
-      const sandboxId = sandbox.sandboxId;
-      sandbox.setTimeout(300000);
-      const host = sandbox.getHost(5173)
-      const previewUrl = `https://${host}`
-  
-      activeSandboxes.set(sandboxId, sandbox);
-  
-      console.log(" Initializing Vite React app inside sandbox...");
-  
-      console.log("Starting Vite development server...");
-
-      try {
-        const checkProcess = await sandbox.commands.run("ps aux | grep vite", {
-          cwd: "/home/user/react-app",
-        });
-        console.log("Vite process check:", checkProcess);
-        const portCheck = await sandbox.commands.run("netstat -tlnp | grep 5173", {
-          cwd: "/home/user/react-app",
-        });
-        console.log("Port 5173 check:", portCheck);
-        
-        const configCheck = await sandbox.commands.run("cat vite.config.js", {
-          cwd: "/home/user/react-app",
-        });
-        console.log("Vite config:", configCheck);
-        
-      } catch (checkError) {
-        console.log("Error checking Vite process:", checkError);
-      }
-
-      console.log(`React app should be running at: ${previewUrl}:5173`);
-  
-      res.json({
-        success: true,
-        message: "Vite React app created and running inside the sandbox",
-        sandboxId,
-        previewUrl: previewUrl,
-        nextSteps: [
-          "Visit the preview URL to access your running React app",
-          "Use the E2B dashboard to inspect or manage the sandbox",
-        ],
-      });
-    } catch (error) {
-      console.error("Error initializing Vite React app:", error);
-  
-      const errorMessage =
-        error instanceof Error ? error.message : JSON.stringify(error);
-      const isPortError =
-        errorMessage.includes("port is not open") ||
-        errorMessage.includes("502") ||
-        errorMessage.includes("connection refused");
-  
-      res.status(500).json({
-        success: false,
-        message: isPortError
-          ? "E2B sandbox port configuration issue — try a different template or contact E2B support"
-          : "An error occurred while initializing the Vite React app",
-        error: errorMessage,
-        sandboxId: sandbox?.sandboxId || "unknown",
-      });
-    }
-  });
 
 app.delete("/sandbox/:sandboxId", async (req, res) => {
     const { sandboxId } = req.params;
@@ -261,35 +191,6 @@ app.get("/sandboxes", (req, res) => {
         success: true,
         activeSandboxes: sandboxList,
         count: sandboxList.length
-    });
-});
-
-app.delete("/cleanup-templates", async (req, res) => {
-    const templatesToDelete = ["73bu50moaayy3jt8ftpv", "v8sgpvr28cszl74a9w52"];
-    const results = [];
-    
-    for (const templateId of templatesToDelete) {
-        try {
-
-            results.push({
-                templateId,
-                status: 'requires_manual_deletion',
-                message: 'Template deletion must be done through E2B dashboard'
-            });
-        } catch (error) {
-            results.push({
-                templateId,
-                status: 'error',
-                message: error instanceof Error ? error.message : 'Unknown error'
-            });
-        }
-    }
-    
-    res.json({
-        success: true,
-        message: 'Template cleanup attempted',
-        results: results,
-        note: 'Templates must be deleted manually through the E2B dashboard'
     });
 });
 
