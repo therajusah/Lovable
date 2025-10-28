@@ -1,4 +1,3 @@
-// Assuming appTsx and initialFileStructure are defined as you had them:
 export const appTsx = `
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'

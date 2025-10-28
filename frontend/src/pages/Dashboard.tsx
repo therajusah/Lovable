@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import ChatPanel from '../components/ChatPanel'
 import CodeEditor from '../components/CodeEditor'
 import PreviewPanel from '../components/PreviewPanel'
-import { AlertCircle, Code, Monitor, Sun, Moon } from 'lucide-react'
+import { Code, Monitor, Sun, Moon } from 'lucide-react'
 import { apiService } from '../services/api'
 import type { Message, GenerationState } from '../types'
 import logowhite from '../assets/lovable-brand/logowhite.svg'
@@ -39,6 +40,10 @@ const Dashboard = () => {
     const checkBackendConnection = async () => {
       const isConnected = await apiService.healthCheck()
       setBackendConnected(isConnected)
+      
+      if (!isConnected) {
+        toast.error('Backend server is disconnected. Please start the backend server.')
+      }
     }
     
     checkBackendConnection()
@@ -109,12 +114,14 @@ const Dashboard = () => {
         }))
         
         setActiveView('preview')
+      
+        toast.success('Your website has been generated successfully!')
         
         setMessages(prev => prev.map(msg => 
           msg.id === aiMessageId 
             ? { 
                 ...msg, 
-                content: msg.content + '\n\n🎉 **Your website is ready!** You can now view it in the preview panel.',
+                content: msg.content + '\n\n**Your website is ready!** You can now view it in the preview panel.',
                 isStreaming: false 
               }
             : msg
@@ -127,13 +134,14 @@ const Dashboard = () => {
           error
         }))
         
+        // Show error toast instead of in chat
+        toast.error(`Failed to generate website: ${error}`, {
+          duration: 5000,
+        })
+        
         setMessages(prev => prev.map(msg => 
           msg.id === aiMessageId 
-            ? { 
-                ...msg, 
-                content: msg.content + `\n\n Error: ${error}`,
-                isStreaming: false 
-              }
+            ? { ...msg, isStreaming: false }
             : msg
         ))
       }
@@ -234,14 +242,6 @@ const Dashboard = () => {
         </div>
       </header>
 
-      {generationState.error && (
-        <div className="bg-destructive/5 backdrop-blur-sm border-b border-destructive/20 px-6 py-3">
-          <div className="flex items-center space-x-2 text-destructive">
-            <AlertCircle className="w-5 h-5" />
-            <span className="text-sm font-medium">{generationState.error}</span>
-          </div>
-        </div>
-      )}
 
       <div className="flex-1 flex overflow-hidden gap-4 p-4">
         <div className="w-1/3 bg-card/80 backdrop-blur-sm rounded-xl border border-border shadow-lg">

@@ -159,15 +159,3 @@ GOOGLE_API_KEY=your_google_api_key_here
 # Server port (optional, defaults to 3003)
 PORT=3003
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-MIT License - feel free to use this project for your own purposes.
