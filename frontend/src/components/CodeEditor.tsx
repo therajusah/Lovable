@@ -1,5 +1,7 @@
 import { useRef } from 'react'
 import Editor from '@monaco-editor/react'
+import type { Monaco } from '@monaco-editor/react'
+import type { editor as MonacoEditor } from 'monaco-editor'
 import { Copy, Download, Code } from 'lucide-react'
 
 interface CodeEditorProps {
@@ -9,9 +11,9 @@ interface CodeEditorProps {
 }
 
 const CodeEditor = ({ code, onChange, sandboxId: _sandboxId }: CodeEditorProps) => {
-  const editorRef = useRef<any>(null)
+  const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null)
 
-  const handleEditorDidMount = (editor: any, monaco: any) => {
+  const handleEditorDidMount = (editor: MonacoEditor.IStandaloneCodeEditor, monaco: Monaco): void => {
     editorRef.current = editor
     
     editor.updateOptions({
@@ -45,7 +47,7 @@ const CodeEditor = ({ code, onChange, sandboxId: _sandboxId }: CodeEditorProps) 
     })
   }
 
-  const handleCopyCode = async () => {
+  const handleCopyCode = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(code)
       console.log('Code copied to clipboard')
@@ -54,7 +56,7 @@ const CodeEditor = ({ code, onChange, sandboxId: _sandboxId }: CodeEditorProps) 
     }
   }
 
-  const handleDownloadCode = () => {
+  const handleDownloadCode = (): void => {
     const blob = new Blob([code], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -66,9 +68,9 @@ const CodeEditor = ({ code, onChange, sandboxId: _sandboxId }: CodeEditorProps) 
     URL.revokeObjectURL(url)
   }
 
-  const formatCode = () => {
+  const formatCode = (): void => {
     if (editorRef.current) {
-      editorRef.current.getAction('editor.action.formatDocument').run()
+      editorRef.current.getAction('editor.action.formatDocument')?.run()
     }
   }
 
@@ -76,7 +78,6 @@ const CodeEditor = ({ code, onChange, sandboxId: _sandboxId }: CodeEditorProps) 
     <div className="h-full flex flex-col bg-card backdrop-blur-sm rounded-xl overflow-hidden border border-border">
       <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card/80 backdrop-blur-sm">
         <div className="flex items-center space-x-2">
-          <Code className="w-5 h-5 text-chart-1" />
           <h2 className="text-lg font-bold text-card-foreground">Code Editor</h2>
         </div>
         <div className="flex items-center space-x-2">
@@ -97,7 +98,7 @@ const CodeEditor = ({ code, onChange, sandboxId: _sandboxId }: CodeEditorProps) 
           </button>
           <button
             onClick={handleDownloadCode}
-            className="px-4 py-2 text-sm bg-linear-to-r from-chart-1 to-chart-2 text-primary-foreground rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center space-x-2 font-medium"
+            className="px-4 py-2 text-sm bg-foreground text-background rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center space-x-2 font-medium"
             title="Download Code"
           >
             <Download className="w-4 h-4" />

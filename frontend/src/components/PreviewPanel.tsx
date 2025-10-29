@@ -133,7 +133,6 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
     <div className="h-full flex flex-col bg-card backdrop-blur-sm rounded-xl overflow-hidden border border-border">
       <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card/80 backdrop-blur-sm">
         <div className="flex items-center space-x-2">
-          <Monitor className="w-5 h-5 text-chart-2" />
           <h2 className="text-lg font-bold text-card-foreground">Preview</h2>
         </div>
         
@@ -225,7 +224,7 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
               <div className="relative mb-6">
                 <div className="absolute inset-0 bg-linear-to-r from-blue-600/20 to-purple-600/20 rounded-full blur-xl"></div>
                 <div className="w-16 h-16 bg-linear-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto relative">
-                  <Sparkles className="w-8 h-8 text-white animate-pulse" />
+                  <Sparkles className="w-8 h-8 text-primary-foreground animate-pulse" />
                 </div>
               </div>
               
@@ -283,10 +282,10 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
               </div>
               
               {showLogs && (
-                <div className="mt-4 border border-gray-200 rounded-lg bg-gray-50 p-2">
-                  <div className="text-xs font-mono text-left h-40 overflow-y-auto bg-gray-900 text-gray-200 p-3 rounded">
+                <div className="mt-4 border border-border rounded-lg bg-muted p-2">
+                  <div className="text-xs font-mono text-left h-40 overflow-y-auto bg-popover text-popover-foreground p-3 rounded">
                     {logs.length === 0 ? (
-                      <p className="text-gray-400 italic">Waiting for logs...</p>
+                      <p className="text-muted-foreground italic">Waiting for logs...</p>
                     ) : (
                       logs.map((log, index) => (
                         <div key={index} className="whitespace-pre-wrap mb-1">
@@ -302,25 +301,25 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
           </div>
         ) : (
           <div className="h-full flex items-center justify-center">
-            <div className="text-center max-w-md px-8 py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50">
+            <div className="text-center max-w-md px-8 py-12 bg-card/80 backdrop-blur-sm rounded-2xl shadow-lg border border-border/50">
               <div className="flex items-center justify-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <Code className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 bg-foreground rounded-xl flex items-center justify-center">
+                  <Code className="w-6 h-6 text-background" />
                 </div>
-                <div className="w-6 h-0.5 bg-gray-200"></div>
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                  <Rocket className="w-6 h-6 text-purple-600" />
+                <div className="w-6 h-0.5 bg-border"></div>
+                <div className="w-12 h-12 bg-foreground rounded-xl flex items-center justify-center">
+                  <Rocket className="w-6 h-6 text-background" />
                 </div>
-                <div className="w-6 h-0.5 bg-gray-200"></div>
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                  <Monitor className="w-6 h-6 text-green-600" />
+                <div className="w-6 h-0.5 bg-border"></div>
+                <div className="w-12 h-12 bg-foreground rounded-xl flex items-center justify-center">
+                  <Monitor className="w-6 h-6 text-background" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Ready to Create</h3>
-              <p className="text-gray-600 mb-6">Describe your website idea in the chat panel, and I'll generate a custom website for you to preview here.</p>
-              <div className="bg-gray-50 p-4 rounded-xl text-left">
-                <p className="text-sm font-medium text-gray-900 mb-2">Try something like:</p>
-                <p className="text-sm text-gray-600 italic">"Create a modern landing page for a fitness app with a hero section, features, and pricing"</p>
+              <h3 className="text-2xl font-bold text-card-foreground mb-3">Ready to Create</h3>
+              <p className="text-muted-foreground mb-6">Describe your website idea in the chat panel, and I'll generate a custom website for you to preview here.</p>
+              <div className="bg-muted p-4 rounded-xl text-left">
+                <p className="text-sm font-medium text-card-foreground mb-2">Try something like:</p>
+                <p className="text-sm text-muted-foreground italic">"Create a modern landing page for a fitness app with a hero section, features, and pricing"</p>
               </div>
             </div>
           </div>

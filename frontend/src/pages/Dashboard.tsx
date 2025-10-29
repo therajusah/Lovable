@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast'
 import ChatPanel from '../components/ChatPanel'
 import CodeEditor from '../components/CodeEditor'
 import PreviewPanel from '../components/PreviewPanel'
-import { Code, Monitor, Sun, Moon } from 'lucide-react'
+import { Sun, Moon } from 'lucide-react'
 import { apiService } from '../services/api'
 import type { Message, GenerationState } from '../types'
 import logowhite from '../assets/lovable-brand/logowhite.svg'
@@ -121,7 +121,7 @@ const Dashboard = () => {
           msg.id === aiMessageId 
             ? { 
                 ...msg, 
-                content: msg.content + '\n\n**Your website is ready!** You can now view it in the preview panel.',
+                content: msg.content + '\n\nYour website is ready! You can now view it in the preview panel.',
                 isStreaming: false 
               }
             : msg
@@ -134,7 +134,6 @@ const Dashboard = () => {
           error
         }))
         
-        // Show error toast instead of in chat
         toast.error(`Failed to generate website: ${error}`, {
           duration: 5000,
         })
@@ -168,24 +167,22 @@ const Dashboard = () => {
                 onClick={() => setActiveView('code')}
                 className={`px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 flex items-center space-x-2 ${
                   activeView === 'code'
-                    ? 'bg-card shadow-sm text-chart-1 scale-105'
+                    ? 'bg-foreground text-background shadow-sm scale-105'
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                 }`}
                 title="Show Code Editor"
               >
-                <Code className="w-4 h-4" />
                 <span>Code</span>
               </button>
               <button
                 onClick={() => setActiveView('preview')}
                 className={`px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 flex items-center space-x-2 ${
                   activeView === 'preview'
-                    ? 'bg-card shadow-sm text-chart-2 scale-105'
+                    ? 'bg-foreground text-background shadow-sm scale-105'
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                 }`}
                 title="Show Preview"
               >
-                <Monitor className="w-4 h-4" />
                 <span>Preview</span>
               </button>
             </div>
