@@ -1,0 +1,219 @@
+.container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.container-wide {
+  @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.section {
+  @apply py-16 md:py-24 lg:py-32;
+}
+
+.section-sm {
+  @apply py-12 md:py-16 lg:py-20;
+}
+
+.gradient-primary {
+  @apply bg-linear-to-r from-purple-600 via-pink-600 to-blue-600;
+}
+
+.gradient-text {
+  @apply bg-linear-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent;
+}
+
+.gradient-border {
+  @apply border border-transparent bg-linear-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-border;
+}
+
+.glass {
+  @apply bg-white/10 dark:bg-black/10 backdrop-blur-lg border border-white/20 dark:border-white/10;
+}
+
+.glass-card {
+  @apply bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-xl;
+}
+
+.card {
+  @apply bg-card text-card-foreground rounded-2xl border border-border shadow-lg;
+}
+
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
+}
+
+.card-interactive {
+  @apply card card-hover cursor-pointer;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50;
+}
+
+.btn-primary {
+  @apply btn bg-foreground text-background hover:bg-foreground/90;
+}
+
+.btn-outline {
+  @apply btn border-2 border-border bg-background hover:bg-accent;
+}
+
+.btn-ghost {
+  @apply btn hover:bg-accent;
+}
+
+.btn-sm {
+  @apply h-9 px-4 text-sm;
+}
+
+.btn-md {
+  @apply h-11 px-6 text-base;
+}
+
+.btn-lg {
+  @apply h-14 px-8 text-lg;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.heading-xl {
+  @apply text-5xl md:text-6xl lg:text-7xl font-black tracking-tight;
+}
+
+.heading-lg {
+  @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+}
+
+.heading-md {
+  @apply text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight;
+}
+
+.heading-sm {
+  @apply text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight;
+}
+
+.body-lg {
+  @apply text-lg md:text-xl lg:text-2xl;
+}
+
+.body-md {
+  @apply text-base md:text-lg;
+}
+
+.space-section {
+  @apply space-y-16 md:space-y-24 lg:space-y-32;
+}
+
+.space-content {
+  @apply space-y-8 md:space-y-12;
+}
+
+.grid-auto-fit {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-auto-fill {
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.animate-on-scroll {
+  @apply opacity-0 translate-y-8 transition-all duration-700;
+}
+
+.animate-on-scroll.in-view {
+  @apply opacity-100 translate-y-0;
+}
+
+.border-gradient {
+  position: relative;
+  background: var(--bg-color, transparent);
+  border-radius: inherit;
+}
+
+.border-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.blob {
+  @apply absolute rounded-full blur-3xl opacity-30 animate-float;
+}
+
+.blob-primary {
+  @apply bg-purple-500;
+}
+
+.blob-secondary {
+  @apply bg-pink-500;
+}
+
+.blob-accent {
+  @apply bg-blue-500;
+}
+
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-2;
+}
+
+.hover-glow {
+  @apply transition-shadow duration-300 hover:shadow-2xl hover:shadow-purple-500/50;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.feature-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8;
+}
+
+.bento-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr;
+}
+
+.bento-item-large {
+  @apply md:col-span-2 md:row-span-2;
+}
+
+.bento-item-wide {
+  @apply md:col-span-2;
+}
+
+.bento-item-tall {
+  @apply md:row-span-2;
+}
+
+.testimonial-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.pricing-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start;
+}
+
+.stats-grid {
+  @apply grid grid-cols-2 md:grid-cols-4 gap-8;
+}
+
+
+.navbar-blur {
+  @apply bg-background/80 backdrop-blur-xl border-b border-border/50;
+}

@@ -1,8 +1,13 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Sun, Moon } from 'lucide-react'
+import { useNavigate, Link } from 'react-router-dom'
+import { Sun, Moon, Github, Twitter, Linkedin } from 'lucide-react'
 import logowhite from '../assets/lovable-brand/logowhite.svg'
 import logoblack from '../assets/lovable-brand/logoblack.svg'
+import { BackgroundBeams } from '../components/ui/BackgroundBeams'
+import { SparklesCore } from '../components/ui/SparklesCore'
+import { CardSpotlight } from '../components/ui/CardSpotlight'
+import { Button } from '../components/ui/Button'
+import { motion } from 'framer-motion'
 
 interface HomePageProps {
   isDark: boolean
@@ -29,161 +34,336 @@ const HomePage = ({ isDark, onToggleTheme }: HomePageProps) => {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-linear-to-br from-chart-1/5 via-chart-2/5 to-chart-3/5"></div>
-        <div className="absolute top-20 left-20 w-72 h-72 bg-chart-1/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-72 h-72 bg-chart-2/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-chart-3/8 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-purple-500/5 via-pink-500/5 to-blue-500/5"></div>
+        <BackgroundBeams className="opacity-40" />
+        <div className="absolute inset-0">
+          <SparklesCore
+            id="tsparticlesfullpage"
+            background="transparent"
+            minSize={0.6}
+            maxSize={1.4}
+            particleDensity={80}
+            className="w-full h-full"
+            particleColor={isDark ? "#FFFFFF" : "#000000"}
+          />
+        </div>
+        <motion.div
+          className="absolute top-20 left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-20 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.5, 0.3, 0.5],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
       </div>
       
-      <header className="relative z-10 px-6 py-6">
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 px-6 py-6"
+      >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <img 
-              src={isDark ? logowhite : logoblack} 
-              alt="Lovable" 
+          <motion.div
+            className="flex items-center space-x-3"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <img
+              src={isDark ? logowhite : logoblack}
+              alt="Lovable"
               className="h-8 w-auto"
             />
-          </div>
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-all duration-200 font-medium hover:scale-105">Community</a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-all duration-200 font-medium hover:scale-105">Pricing</a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-all duration-200 font-medium hover:scale-105">Enterprise</a>
-            <button className="text-muted-foreground hover:text-foreground transition-all duration-200 font-medium hover:scale-105">Log in</button>
-            <button
+          </motion.div>
+          <nav className="hidden md:flex items-center space-x-6">
+            <motion.a
+              href="#"
+              className="text-muted-foreground hover:text-foreground transition-all duration-200 font-medium"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Community
+            </motion.a>
+            <motion.a
+              href="#"
+              className="text-muted-foreground hover:text-foreground transition-all duration-200 font-medium"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Pricing
+            </motion.a>
+            <motion.a
+              href="#"
+              className="text-muted-foreground hover:text-foreground transition-all duration-200 font-medium"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Enterprise
+            </motion.a>
+            <Link to="/signin">
+              <Button variant="ghost" size="sm">
+                Log in
+              </Button>
+            </Link>
+            <motion.button
               onClick={onToggleTheme}
-              className="p-2.5 rounded-xl bg-muted hover:bg-muted/80 transition-all duration-200 hover:scale-105"
+              className="p-2.5 rounded-xl bg-muted/50 backdrop-blur-sm hover:bg-muted transition-all duration-200"
+              whileHover={{ scale: 1.1, rotate: 180 }}
+              whileTap={{ scale: 0.9 }}
               title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
             >
-              {isDark ? <Sun className="w-5 h-5 text-muted-foreground" /> : <Moon className="w-5 h-5 text-muted-foreground" />}
-            </button>
-            <button className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl font-semibold hover:bg-primary/90 hover:scale-105 transition-all duration-200 shadow-lg">
-              Get started
-            </button>
+              {isDark ? <Sun className="w-5 h-5 text-foreground" /> : <Moon className="w-5 h-5 text-foreground" />}
+            </motion.button>
+            <Link to="/signup">
+              <Button variant="default" size="sm">
+                Get started
+              </Button>
+            </Link>
           </nav>
         </div>
-      </header>
+      </motion.header>
 
       <main className="relative z-10 px-6 flex-1 flex items-center justify-center min-h-[calc(100vh-100px)]">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center px-6 py-3 bg-card/80 backdrop-blur-md border border-border rounded-full mb-10 text-card-foreground text-sm font-medium shadow-lg">
-            <span className="mr-3 text-chart-2">✨</span>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="inline-flex items-center px-6 py-3 bg-card/80 backdrop-blur-md border border-border rounded-full mb-10 text-card-foreground text-sm font-medium shadow-lg"
+          >
+            <span className="mr-3">✨</span>
             Introducing Lovable
+          </motion.div>
 
-          </div>
-
-          <div className="mb-12">
-            <h1 className="text-5xl md:text-6xl font-black text-foreground mb-8 leading-tight tracking-tight">
+          <motion.div
+            className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            <h1 className="text-5xl md:text-7xl font-black text-foreground mb-8 leading-tight tracking-tight">
               Build something with{' '}
-              <span className="bg-linear-to-r from-chart-1 via-chart-2 to-chart-3 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-500 via-pink-500 to-blue-500 bg-clip-text text-transparent">
                 ❤️ Lovable
               </span>
             </h1>
-            <p className="text-1xl md:text-2xl text-muted-foreground mb-16 max-w-3xl mx-auto leading-relaxed font-light">
-              Create stunning websites by chatting with AI
+            <p className="text-xl md:text-2xl text-muted-foreground mb-16 max-w-3xl mx-auto leading-relaxed">
+              Create stunning websites by chatting with AI. Turn your ideas into reality in seconds.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="mb-20">
+          <motion.div
+            className="mb-20"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+          >
             <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-              <div className="relative bg-card/90 backdrop-blur-xl border border-border rounded-3xl p-3 shadow-2xl hover:shadow-chart-1/10 transition-all duration-300">
+              <motion.div
+                className="relative bg-card/90 backdrop-blur-xl border-2 border-border rounded-3xl p-3 shadow-2xl"
+                whileHover={{
+                  scale: 1.02,
+                  boxShadow: "0 25px 50px -12px rgba(168, 85, 247, 0.25)"
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
                 <div className="flex items-start space-x-4 px-4 pt-4">
                   <div className="flex-1">
                     <textarea
                       value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
-                        placeholder="Ask Lovable to create a website..."
+                      placeholder="Ask Lovable to create a website..."
                       className="w-full bg-transparent text-card-foreground placeholder-muted-foreground resize-none focus:outline-none text-lg leading-relaxed min-h-[60px] max-h-[120px] font-light"
                       rows={2}
                     />
                   </div>
                 </div>
-                
-                <div className="flex items-center justify-end px-4 pb-3 ">
-                   
-                    <button
-                      type="submit"
-                      disabled={!prompt.trim()}
-                      className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground transition-opacity duration-150 ease-out disabled:cursor-not-allowed disabled:opacity-50 md:h-8 md:w-8"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="100%" height="100%" className="shrink-0 h-6 w-6 text-background">
-                        <path fill="currentColor" d="M11 19V7.415l-3.293 3.293a1 1 0 1 1-1.414-1.414l5-5 .074-.067a1 1 0 0 1 1.34.067l5 5a1 1 0 1 1-1.414 1.414L13 7.415V19a1 1 0 1 1-2 0"></path>
-                      </svg>
-                    </button>
-                </div>
-              </div>
-            </form>
-          </div>
 
-          <div className="text-left max-w-6xl mx-auto">
+                <div className="flex items-center justify-end px-4 pb-3">
+                  <motion.button
+                    type="submit"
+                    disabled={!prompt.trim()}
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground transition-opacity duration-150 ease-out disabled:cursor-not-allowed disabled:opacity-50 hover:bg-foreground/90"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="100%" height="100%" className="shrink-0 h-6 w-6 text-background">
+                      <path fill="currentColor" d="M11 19V7.415l-3.293 3.293a1 1 0 1 1-1.414-1.414l5-5 .074-.067a1 1 0 0 1 1.34.067l5 5a1 1 0 1 1-1.414 1.414L13 7.415V19a1 1 0 1 1-2 0"></path>
+                    </svg>
+                  </motion.button>
+                </div>
+              </motion.div>
+            </form>
+          </motion.div>
+
+          <motion.div
+            className="text-left max-w-6xl mx-auto"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+          >
             <div className="flex items-center justify-between mb-10">
               <h2 className="text-3xl font-bold text-foreground">From the Community</h2>
-              <button className="text-chart-1 hover:text-foreground transition-all duration-200 flex items-center space-x-2 font-medium hover:scale-105">
+              <motion.button
+                className="text-foreground hover:text-muted-foreground transition-all duration-200 flex items-center space-x-2 font-medium"
+                whileHover={{ scale: 1.05, x: 5 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <span>View all</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="20" height="20" className="rotate-45">
+                <motion.svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                  className="rotate-45"
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
                   <path fill="currentColor" d="M11 19V7.415l-3.293 3.293a1 1 0 1 1-1.414-1.414l5-5 .074-.067a1 1 0 0 1 1.34.067l5 5a1 1 0 1 1-1.414 1.414L13 7.415V19a1 1 0 1 1-2 0"></path>
-                </svg>
-              </button>
+                </motion.svg>
+              </motion.button>
             </div>
-            
+
             <div className="grid md:grid-cols-3 gap-6 mb-16">
               {examplePrompts.slice(0, 3).map((example, index) => {
-                const cardAccents = [
-                  'text-blue-600',
-                  'text-emerald-600', 
-                  'text-purple-600'
+                const spotlightColors = [
+                  "rgba(59, 130, 246, 0.35)",
+                  "rgba(16, 185, 129, 0.35)",
+                  "rgba(168, 85, 247, 0.35)"
                 ];
-                const cardAccent = cardAccents[index];
-                
+                const accentColors = [
+                  'from-blue-500 to-cyan-500',
+                  'from-emerald-500 to-teal-500',
+                  'from-purple-500 to-pink-500'
+                ];
+
                 return (
-                  <button
+                  <motion.div
                     key={index}
-                    onClick={() => setPrompt(example)}
-                    className="group relative bg-card/60 backdrop-blur-sm border border-border/60 rounded-xl p-6 hover:bg-card/80 hover:border-chart-1/40 transition-all duration-500 text-left hover:translate-y-[-2px] hover:shadow-xl hover:shadow-chart-1/10"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 + index * 0.1, duration: 0.5 }}
+                    whileHover={{ y: -8 }}
                   >
-                    <div className="absolute inset-0 bg-linear-to-br from-chart-1/5 via-transparent to-chart-2/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-end mb-4">
-                        <div className="px-3 py-1 bg-muted/50 rounded-full">
-                          <span className="text-xs font-medium text-muted-foreground">Template</span>
+                    <CardSpotlight
+                      className="cursor-pointer text-left h-full"
+                      spotlightColor={spotlightColors[index]}
+                      onClick={() => setPrompt(example)}
+                    >
+                      <div className="p-6">
+                        <div className="flex items-center justify-end mb-4">
+                          <div className="px-3 py-1 bg-muted/50 backdrop-blur-sm rounded-full">
+                            <span className="text-xs font-medium text-muted-foreground">Template</span>
+                          </div>
+                        </div>
+
+                        <h3 className="text-lg font-semibold text-card-foreground mb-2 leading-tight">
+                          {example}
+                        </h3>
+
+                        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                          {index === 0 && "Professional landing page with hero section, features, and pricing"}
+                          {index === 1 && "Task management app with modern dark theme and smooth animations"}
+                          {index === 2 && "Creative portfolio showcasing work with beautiful transitions"}
+                        </p>
+
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <div className="flex items-center space-x-4">
+                            <span className="flex items-center space-x-1">
+                              <div className={`w-2 h-2 rounded-full bg-linear-to-r ${accentColors[index]}`}></div>
+                              <span>{Math.floor(Math.random() * 50) + 20}k uses</span>
+                            </span>
+                            <span className="flex items-center space-x-1">
+                              <div className="w-2 h-2 rounded-full bg-chart-2"></div>
+                              <span>4.{Math.floor(Math.random() * 3) + 7}/5</span>
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      
-                      <h3 className="text-lg font-semibold text-card-foreground mb-2 leading-tight group-hover:text-chart-1 transition-colors duration-300">
-                        {example}
-                      </h3>
-                      
-                      <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                        {index === 0 && "Professional landing page with hero section, features, and pricing"}
-                        {index === 1 && "Task management app with modern dark theme and smooth animations"}
-                        {index === 2 && "Creative portfolio showcasing work with beautiful transitions"}
-                      </p>
-                      
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <div className="flex items-center space-x-4">
-                          <span className="flex items-center space-x-1">
-                            <div className="w-2 h-2 rounded-full bg-chart-3"></div>
-                            <span>{Math.floor(Math.random() * 50) + 20}k uses</span>
-                          </span>
-                          <span className="flex items-center space-x-1">
-                            <div className="w-2 h-2 rounded-full bg-chart-2"></div>
-                            <span>4.{Math.floor(Math.random() * 3) + 7}/5</span>
-                          </span>
-                        </div>
-                        <div className={`${cardAccent} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="16" height="16" className="rotate-45">
-                            <path fill="currentColor" d="M11 19V7.415l-3.293 3.293a1 1 0 1 1-1.414-1.414l5-5 .074-.067a1 1 0 0 1 1.34.067l5 5a1 1 0 1 1-1.414 1.414L13 7.415V19a1 1 0 1 1-2 0"></path>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </button>
+                    </CardSpotlight>
+                  </motion.div>
                 );
               })}
             </div>
 
-          </div>
+          </motion.div>
         </div>
       </main>
+      <footer className="relative z-10 border-t border-border/50 bg-background/80 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-6 py-10">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <img
+                src={isDark ? logowhite : logoblack}
+                alt="Lovable"
+                className="h-7 w-auto mb-3"
+              />
+              <p className="text-xs text-muted-foreground">
+                Build websites with AI
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium text-foreground mb-3 text-sm">Product</h3>
+              <ul className="space-y-2 text-xs text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Templates</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">API</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-medium text-foreground mb-3 text-sm">Company</h3>
+              <ul className="space-y-2 text-xs text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-medium text-foreground mb-3 text-sm">Legal</h3>
+              <ul className="space-y-2 text-xs text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Privacy</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Terms</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Security</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="pt-6 border-t border-border/50 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-xs text-muted-foreground mb-3 md:mb-0">
+              © 2025 Lovable. All rights reserved.
+            </p>
+            <div className="flex items-center space-x-4">
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Twitter className="w-4 h-4" />
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Github className="w-4 h-4" />
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Linkedin className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

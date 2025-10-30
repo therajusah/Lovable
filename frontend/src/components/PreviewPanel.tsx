@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { RefreshCw, ExternalLink, Monitor, Smartphone, Tablet, Code, Sparkles, Rocket, Terminal, ChevronUp, ChevronDown } from 'lucide-react'
+import { RefreshCw, ExternalLink, Monitor, Smartphone, Tablet, Code, Rocket, Terminal, ChevronUp, ChevronDown } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 interface PreviewPanelProps {
   url: string
@@ -130,65 +131,75 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
   }
 
   return (
-    <div className="h-full flex flex-col bg-card backdrop-blur-sm rounded-xl overflow-hidden border border-border">
-      <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card/80 backdrop-blur-sm">
+    <div className="h-full flex flex-col bg-transparent overflow-hidden">
+      <div className="flex items-center justify-between px-6 py-5 border-b border-border/50 bg-muted/30 backdrop-blur-sm">
         <div className="flex items-center space-x-2">
-          <h2 className="text-lg font-bold text-card-foreground">Preview</h2>
+          <h2 className="text-base font-semibold text-foreground">Preview</h2>
         </div>
-        
+
         <div className="flex items-center space-x-2">
-          <div className="flex items-center bg-muted rounded-xl p-1">
-            <button
+          <div className="flex items-center bg-muted/50 backdrop-blur-sm rounded-xl p-1 border border-border/30">
+            <motion.button
               onClick={() => setViewport('desktop')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className={`p-2 rounded-lg transition-all duration-200 ${
-                viewport === 'desktop' 
-                  ? 'bg-card shadow-sm text-chart-1 scale-105' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                viewport === 'desktop'
+                  ? 'bg-foreground text-background shadow-lg'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
               }`}
               title="Desktop View"
             >
               <Monitor className="w-4 h-4" />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               onClick={() => setViewport('tablet')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className={`p-2 rounded-lg transition-all duration-200 ${
-                viewport === 'tablet' 
-                  ? 'bg-card shadow-sm text-chart-1 scale-105' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                viewport === 'tablet'
+                  ? 'bg-foreground text-background shadow-lg'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
               }`}
               title="Tablet View"
             >
               <Tablet className="w-4 h-4" />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               onClick={() => setViewport('mobile')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className={`p-2 rounded-lg transition-all duration-200 ${
-                viewport === 'mobile' 
-                  ? 'bg-card shadow-sm text-chart-1 scale-105' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                viewport === 'mobile'
+                  ? 'bg-foreground text-background shadow-lg'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
               }`}
               title="Mobile View"
             >
               <Smartphone className="w-4 h-4" />
-            </button>
+            </motion.button>
           </div>
 
           <div className="flex items-center space-x-2">
-            <button
+            <motion.button
               onClick={handleRefresh}
-              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all duration-200 hover:scale-105"
+              whileHover={{ scale: 1.05, rotate: 180 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-lg transition-all duration-200"
               title="Refresh Preview"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               onClick={handleOpenInNewTab}
-              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100"
               title="Open in New Tab"
               disabled={!url}
             >
               <ExternalLink className="w-4 h-4" />
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
@@ -219,14 +230,24 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
             </div>
           </div>
         ) : isGenerating ? (
-          <div className="h-full flex items-center justify-center">
-            <div className="text-center max-w-lg px-8 py-12 bg-card/80 backdrop-blur-sm rounded-2xl shadow-lg border border-border/50">
-              <div className="relative mb-6">
-                <div className="absolute inset-0 bg-linear-to-r from-blue-600/20 to-purple-600/20 rounded-full blur-xl"></div>
-                <div className="w-16 h-16 bg-linear-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto relative">
-                  <Sparkles className="w-8 h-8 text-primary-foreground animate-pulse" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="h-full flex items-center justify-center"
+          >
+            <div className="text-center max-w-lg px-8 py-12 bg-card/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/50">
+              <motion.div
+                className="relative mb-6"
+              >
+                <div className="w-20 h-20 bg-muted/50 rounded-2xl flex items-center justify-center mx-auto relative shadow-xl">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  >
+                    <RefreshCw className="w-10 h-10" />
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
               
               <div className="mb-6 animate-in fade-in slide-in-from-bottom-3 duration-300">
                 <h3 className="text-2xl font-bold text-card-foreground mb-1">
@@ -261,26 +282,26 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
               <div className="mb-6 h-16">
                 <p className="text-muted-foreground mb-4 animate-in fade-in slide-in-from-bottom-3 duration-500 min-h-8">{loadingTip}</p>
                 <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-linear-to-r from-blue-500 to-purple-500 rounded-full relative transition-all duration-1000 ease-in-out"
+                  <div
+                    className="h-full bg-foreground rounded-full relative transition-all duration-1000 ease-in-out"
                     style={{ width: `${((currentStep + 1) / generationSteps.length) * 100}%` }}
                   >
-                    <div className="absolute top-0 left-0 h-full w-1/3 bg-white/30 animate-shimmer"></div>
+                    <div className="absolute top-0 left-0 h-full w-1/3 bg-background/30 animate-shimmer"></div>
                   </div>
                 </div>
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">This may take a few moments...</p>
-                <button 
+                <button
                   onClick={() => setShowLogs(!showLogs)}
-                  className="flex items-center space-x-1 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                  className="flex items-center space-x-1 text-sm text-foreground hover:text-muted-foreground transition-colors"
                 >
                   <Terminal className="w-3.5 h-3.5" />
                   <span>{showLogs ? "Hide Logs" : "Show Logs"}</span>
                   {showLogs ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
                 </button>
               </div>
-              
+
               {showLogs && (
                 <div className="mt-4 border border-border rounded-lg bg-muted p-2">
                   <div className="text-xs font-mono text-left h-40 overflow-y-auto bg-popover text-popover-foreground p-3 rounded">
@@ -289,7 +310,7 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
                     ) : (
                       logs.map((log, index) => (
                         <div key={index} className="whitespace-pre-wrap mb-1">
-                          <span className="text-green-400">$</span> {log}
+                          <span className="text-foreground">$</span> {log}
                         </div>
                       ))
                     )}
@@ -298,31 +319,46 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         ) : (
-          <div className="h-full flex items-center justify-center">
-            <div className="text-center max-w-md px-8 py-12 bg-card/80 backdrop-blur-sm rounded-2xl shadow-lg border border-border/50">
-              <div className="flex items-center justify-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-foreground rounded-xl flex items-center justify-center">
-                  <Code className="w-6 h-6 text-background" />
-                </div>
-                <div className="w-6 h-0.5 bg-border"></div>
-                <div className="w-12 h-12 bg-foreground rounded-xl flex items-center justify-center">
-                  <Rocket className="w-6 h-6 text-background" />
-                </div>
-                <div className="w-6 h-0.5 bg-border"></div>
-                <div className="w-12 h-12 bg-foreground rounded-xl flex items-center justify-center">
-                  <Monitor className="w-6 h-6 text-background" />
-                </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="h-full flex items-center justify-center"
+          >
+            <div className="text-center max-w-md px-8 py-12 bg-card/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/50">
+              <div className="flex items-center justify-center space-x-3 mb-6">
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="w-14 h-14 bg-muted rounded-xl flex items-center justify-center shadow-lg"
+                >
+                  <Code className="w-7 h-7 text-foreground" />
+                </motion.div>
+                <div className="w-8 h-1 bg-foreground/30 rounded-full"></div>
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                  className="w-14 h-14 bg-foreground rounded-xl flex items-center justify-center shadow-lg"
+                >
+                  <Rocket className="w-7 h-7 text-background" />
+                </motion.div>
+                <div className="w-8 h-1 bg-foreground/30 rounded-full"></div>
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="w-14 h-14 bg-muted rounded-xl flex items-center justify-center shadow-lg"
+                >
+                  <Monitor className="w-7 h-7 text-foreground" />
+                </motion.div>
               </div>
               <h3 className="text-2xl font-bold text-card-foreground mb-3">Ready to Create</h3>
               <p className="text-muted-foreground mb-6">Describe your website idea in the chat panel, and I'll generate a custom website for you to preview here.</p>
-              <div className="bg-muted p-4 rounded-xl text-left">
-                <p className="text-sm font-medium text-card-foreground mb-2">Try something like:</p>
+              <div className="bg-muted/50 p-5 rounded-xl text-left border border-border">
+                <p className="text-sm font-semibold text-card-foreground mb-2">
+                  Try something like:
+                </p>
                 <p className="text-sm text-muted-foreground italic">"Create a modern landing page for a fitness app with a hero section, features, and pricing"</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

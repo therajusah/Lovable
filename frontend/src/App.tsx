@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import HomePage from './pages/HomePage'
 import Dashboard from './pages/Dashboard'
+import SignUp from './pages/SignUp'
+import SignIn from './pages/SignIn'
 
 function App() {
   const [isDark, setIsDark] = useState(false)
@@ -56,6 +58,8 @@ function App() {
         />
         <Routes>
           <Route path="/" element={<HomePage isDark={isDark} onToggleTheme={toggleTheme} />} />
+          <Route path="/signup" element={<SignUp isDark={isDark} onToggleTheme={toggleTheme} />} />
+          <Route path="/signin" element={<SignIn isDark={isDark} onToggleTheme={toggleTheme} />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
