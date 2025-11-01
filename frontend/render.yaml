@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: lovable-frontend
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: VITE_BACKEND_URL
+        sync: false
