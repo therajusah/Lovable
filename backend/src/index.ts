@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from "express";
-import { Sandbox } from "@e2b/code-interpreter";
+import { Sandbox } from "e2b";
 import { streamText } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { SYSTEM_PROMPT } from './prompt.js';
@@ -110,8 +110,9 @@ app.post("/prompt", async (req, res) => {
                         result = `Content of '${input.location}':\n\`\`\`\n${content}\n\`\`\``;
                     } else if (delta.toolName === 'runCommand') {
                         try {
-                            const commandResult = await sandbox!.runCode(input.command);
-                            result = `Command: \`${input.command}\`\nOutput:\n\`\`\`\n${commandResult}\n\`\`\``;
+                            const commandResult = await sandbox!.commands.run(input.command);
+                            const output = commandResult.stdout + (commandResult.stderr ? `\nSTDERR: ${commandResult.stderr}` : '');
+                            result = `Command: \`${input.command}\`\nOutput:\n\`\`\`\n${output}\n\`\`\``;
                         } catch (cmdError) {
                             result = `Error executing command '${input.command}': ${cmdError instanceof Error ? cmdError.message : String(cmdError)}`;
                         }
@@ -130,7 +131,7 @@ app.post("/prompt", async (req, res) => {
         console.log("LLM finished processing. Final Text output:", finalResponseText);
         
 
-        res.write(`\n\n🎉 **Website Preview Available!**\n`);
+        res.write(`\n\n**Website Preview Available!**\n`);
         res.write(`Preview URL: ${previewUrl}\n`);
         res.write(`Sandbox ID: ${sandboxId}\n`);
         res.write(`\nYou can now view your website at the preview URL above!\n`);

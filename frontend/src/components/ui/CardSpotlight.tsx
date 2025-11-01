@@ -6,10 +6,12 @@ export const CardSpotlight = ({
   children,
   className,
   spotlightColor = "rgba(168, 85, 247, 0.35)",
+  onClick,
 }: {
   children: React.ReactNode;
   className?: string;
   spotlightColor?: string;
+  onClick?: () => void;
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -30,6 +32,7 @@ export const CardSpotlight = ({
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
       className={cn(
         "relative overflow-hidden rounded-xl bg-card border border-border",
         className

@@ -9,9 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsc -b && node ./dist/index.js",
-    "build:dev": "npx tsx build.dev.ts",
-    "build:prod": "npx tsx build.prod.ts",
-    "sandbox": "npx tsx start-sandbox.ts"
+    "build": "tsc",
+    "start": "node ./dist/index.js"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.37",
@@ -19,17 +18,15 @@
     "@ai-sdk/groq": "^2.0.24",
     "@ai-sdk/openai": "^2.0.53",
     "@ai-sdk/react": "^2.0.77",
-    "@e2b/code-interpreter": "^2.1.0",
-    "@e2b/sdk": "^0.12.5",
     "@openrouter/ai-sdk-provider": "^1.2.0",
     "ai": "^5.0.77",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "e2b": "^2.4.0",
+    "e2b": "^2.6.0",
     "express": "^5.1.0",
     "typescript": "^5.9.3",
     "v0-sdk": "^0.15.0",
-    "zod": "^4.1.12"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/archiver": "^6.0.3",
