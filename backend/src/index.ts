@@ -19,6 +19,10 @@ app.use(express.json());
 
 const activeSandboxes: Map<string, Sandbox> = new Map();
 
+app.get("/health", (req, res) => {
+    res.json("Backend is running");
+})
+
 app.post("/prompt", async (req, res) => {
     const { prompt } = req.body;
 

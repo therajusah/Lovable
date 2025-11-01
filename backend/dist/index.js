@@ -12,6 +12,9 @@ const port = process.env.PORT || 3003;
 app.use(cors());
 app.use(express.json());
 const activeSandboxes = new Map();
+app.get("/health", (req, res) => {
+    res.json("Backend is running");
+});
 app.post("/prompt", async (req, res) => {
     const { prompt } = req.body;
     if (!prompt) {
