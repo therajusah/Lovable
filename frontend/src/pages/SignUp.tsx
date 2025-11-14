@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Sun, Moon, Mail, Lock, User } from 'lucide-react'
-import logowhite from '../assets/lovable-brand/logowhite.svg'
-import logoblack from '../assets/lovable-brand/logoblack.svg'
 import { Button } from '../components/ui/Button'
 import { motion } from 'framer-motion'
 
@@ -29,11 +27,9 @@ const SignUp = ({ isDark, onToggleTheme }: SignUpProps) => {
       <header className="px-6 py-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3">
-            <img
-              src={isDark ? logowhite : logoblack}
-              alt="Lovable"
-              className="h-8 w-auto"
-            />
+            <span className="text-2xl font-black text-foreground">
+              AIsiteBuilder
+            </span>
           </Link>
           <div className="flex items-center space-x-4">
             <button

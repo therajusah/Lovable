@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: lovable-backend
+    name: aisitebuilder-backend
     runtime: node
     buildCommand: npm install && npm run build
     startCommand: npm start

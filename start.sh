@@ -1,4 +1,4 @@
-echo "Starting Lovable Clone..."
+echo "Starting AIsiteBuilder..."
 
 if ! command -v node &> /dev/null; then
     echo "Node.js is not installed. Please install Node.js first."

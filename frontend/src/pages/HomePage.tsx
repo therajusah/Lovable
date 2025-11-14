@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Sun, Moon, Github, Twitter, Linkedin } from 'lucide-react'
-import logowhite from '../assets/lovable-brand/logowhite.svg'
-import logoblack from '../assets/lovable-brand/logoblack.svg'
 import { BackgroundBeams } from '../components/ui/BackgroundBeams'
 import { SparklesCore } from '../components/ui/SparklesCore'
 import { CardSpotlight } from '../components/ui/CardSpotlight'
@@ -85,11 +83,11 @@ const HomePage = ({ isDark, onToggleTheme }: HomePageProps) => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <img
-              src={isDark ? logowhite : logoblack}
-              alt="Lovable"
-              className="h-8 w-auto"
-            />
+            <Link to="/" className="flex items-center">
+              <span className="text-2xl font-black text-foreground">
+                AIsiteBuilder
+              </span>
+            </Link>
           </motion.div>
           <nav className="hidden md:flex items-center space-x-6">
             <motion.a
@@ -148,7 +146,7 @@ const HomePage = ({ isDark, onToggleTheme }: HomePageProps) => {
             className="inline-flex items-center px-6 py-3 bg-card/80 backdrop-blur-md border border-border rounded-full mb-10 text-card-foreground text-sm font-medium shadow-lg"
           >
             <span className="mr-3">✨</span>
-            Introducing Lovable
+            Introducing AIsiteBuilder
           </motion.div>
 
           <motion.div
@@ -159,8 +157,8 @@ const HomePage = ({ isDark, onToggleTheme }: HomePageProps) => {
           >
             <h1 className="text-5xl md:text-7xl font-black text-foreground mb-8 leading-tight tracking-tight">
               Build something with{' '}
-              <span className="bg-linear-to-r from-purple-500 via-pink-500 to-blue-500 bg-clip-text text-transparent">
-                ❤️ Lovable
+              <span className="text-foreground">
+                ❤️ AIsiteBuilder
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-16 max-w-3xl mx-auto leading-relaxed">
@@ -188,7 +186,7 @@ const HomePage = ({ isDark, onToggleTheme }: HomePageProps) => {
                     <textarea
                       value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
-                      placeholder="Ask Lovable to create a website..."
+                      placeholder="Ask AIsiteBuilder to create a website..."
                       className="w-full bg-transparent text-card-foreground placeholder-muted-foreground resize-none focus:outline-none text-lg leading-relaxed min-h-[60px] max-h-[120px] font-light"
                       rows={2}
                     />
@@ -310,11 +308,9 @@ const HomePage = ({ isDark, onToggleTheme }: HomePageProps) => {
         <div className="max-w-6xl mx-auto px-6 py-10">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <img
-                src={isDark ? logowhite : logoblack}
-                alt="Lovable"
-                className="h-7 w-auto mb-3"
-              />
+              <span className="text-xl font-black text-foreground mb-3 block">
+                AIsiteBuilder
+              </span>
               <p className="text-xs text-muted-foreground">
                 Build websites with AI
               </p>
@@ -348,7 +344,7 @@ const HomePage = ({ isDark, onToggleTheme }: HomePageProps) => {
           </div>
           <div className="pt-6 border-t border-border/50 flex flex-col md:flex-row justify-between items-center">
             <p className="text-xs text-muted-foreground mb-3 md:mb-0">
-              © 2025 Lovable. All rights reserved.
+              © 2025 AIsiteBuilder. All rights reserved.
             </p>
             <div className="flex items-center space-x-4">
               <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">

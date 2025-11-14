@@ -1,4 +1,4 @@
-# E2B Template for Lovable Project
+# E2B Template for AIsiteBuilder Project
 
 This directory contains an E2B template configuration for creating custom sandboxes.
 
@@ -22,14 +22,14 @@ Build the development template:
 ```bash
 npm run build:dev
 ```
-This creates a template with alias `lovable-dev`.
+This creates a template with alias `aisitebuilder-dev`.
 
 ### Production Template
 Build the production template:
 ```bash
 npm run build:prod
 ```
-This creates a template with alias `lovable`.
+This creates a template with alias `aisitebuilder`.
 
 ## Using the Template
 
@@ -43,7 +43,7 @@ import { Sandbox } from "e2b";
 const sandbox = await Sandbox.create("73bu50moaayy3jt8ftpv");
 
 // Create a Sandbox from V2 development template
-const sandbox = await Sandbox.create("lovable");
+const sandbox = await Sandbox.create("aisitebuilder");
 ```
 
 ## Template Configuration

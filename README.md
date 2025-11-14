@@ -1,6 +1,6 @@
-# Lovable Clone
+# AIsiteBuilder
 
-A full-stack web application that allows users to generate websites using AI, similar to Lovable and v0.
+A full-stack web application that allows users to generate websites using AI, similar to v0.
 
 ## Features
 

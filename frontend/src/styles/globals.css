@@ -15,15 +15,15 @@
 }
 
 .gradient-primary {
-  @apply bg-linear-to-r from-purple-600 via-pink-600 to-blue-600;
+  @apply bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600;
 }
 
 .gradient-text {
-  @apply bg-linear-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent;
 }
 
 .gradient-border {
-  @apply border border-transparent bg-linear-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-border;
+  @apply border border-transparent bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-border;
 }
 
 .glass {

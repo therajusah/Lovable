@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: lovable-frontend
+    name: AIsiteBuilder-frontend
     runtime: static
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist

@@ -7,8 +7,6 @@ import PreviewPanel from '../components/PreviewPanel'
 import { Sun, Moon } from 'lucide-react'
 import { apiService } from '../services/api'
 import type { Message, GenerationState } from '../types'
-import logowhite from '../assets/lovable-brand/logowhite.svg'
-import logoblack from '../assets/lovable-brand/logoblack.svg'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useWebSocketContext } from '../hooks/useWebSocketContext'
 
@@ -185,11 +183,9 @@ const Dashboard = () => {
             whileHover={{ scale: 1.02 }}
           >
             <div className="flex items-center space-x-3">
-              <img
-                src={isDark ? logowhite : logoblack}
-                alt="Lovable"
-                className="h-7 w-auto"
-              />
+              <span className="text-xl font-black text-foreground">
+                AIsiteBuilder
+              </span>
             </div>
           </motion.div>
 
