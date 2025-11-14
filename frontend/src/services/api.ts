@@ -34,10 +34,11 @@ export class ApiService {
 
 
   public async generateWebsite(
-    prompt: string, 
+    prompt: string,
     onChunk?: (chunk: string) => void,
     onComplete?: (result: { sandboxId: string; previewUrl: string }) => void,
-    onError?: (error: string) => void
+    onError?: (error: string) => void,
+    sessionId?: string
   ): Promise<void> {
     try {
       const response = await fetch(`${API_BASE_URL}/prompt`, {
@@ -45,15 +46,15 @@ export class ApiService {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt, sessionId }),
       })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error('Request failed')
       }
 
       if (!response.body) {
-        throw new Error('No response body')
+        throw new Error('No response')
       }
 
       const reader = response.body.getReader()
@@ -110,18 +111,17 @@ export class ApiService {
     } catch (error) {
       console.error('Error generating website:', error)
       if (onError) {
-        onError(error instanceof Error ? error.message : 'Unknown error occurred')
+        onError(error instanceof Error ? error.message : 'Request failed')
       }
     }
   }
 
-  // Get list of active sandboxes
   public async getSandboxes(): Promise<SandboxListResponse> {
     try {
       const response = await fetch(`${API_BASE_URL}/sandboxes`)
-      
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error('Request failed')
       }
       
       return await response.json()
@@ -141,9 +141,9 @@ export class ApiService {
       const response = await fetch(`${API_BASE_URL}/sandbox/${sandboxId}`, {
         method: 'DELETE',
       })
-      
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error('Request failed')
       }
       
       return await response.json()
@@ -151,7 +151,7 @@ export class ApiService {
       console.error('Error deleting sandbox:', error)
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: error instanceof Error ? error.message : 'Request failed'
       }
     }
   }
@@ -182,7 +182,7 @@ export class ApiService {
       return '✨ Your website has been generated successfully!'
     }
     
-    let cleanedLine = line
+    const cleanedLine = line
       .replace(/^\[Tool.*?\]/, '')
       .replace(/^Command:.*?\n/, '')
       .replace(/^Output:.*?\n/, '')

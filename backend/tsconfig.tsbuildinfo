@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/prompt.ts","./src/tools/index.ts"],"version":"5.9.3"}
+{"root":["./src/index.ts","./src/prompt.ts","./src/handlers/toolhandlers.ts","./src/services/sandboxmanager.ts","./src/tools/index.ts","./src/websocket/e2beventemitter.ts","./src/websocket/websocketmanager.ts"],"version":"5.9.3"}

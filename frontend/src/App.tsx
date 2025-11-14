@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage'
 import Dashboard from './pages/Dashboard'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
+import { WebSocketProvider } from './contexts/WebSocketContext'
 
 function App() {
   const [isDark, setIsDark] = useState(false)
@@ -60,7 +61,14 @@ function App() {
           <Route path="/" element={<HomePage isDark={isDark} onToggleTheme={toggleTheme} />} />
           <Route path="/signup" element={<SignUp isDark={isDark} onToggleTheme={toggleTheme} />} />
           <Route path="/signin" element={<SignIn isDark={isDark} onToggleTheme={toggleTheme} />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/dashboard"
+            element={
+              <WebSocketProvider>
+                <Dashboard />
+              </WebSocketProvider>
+            }
+          />
         </Routes>
       </div>
     </Router>

@@ -1,27 +1,29 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { RefreshCw, ExternalLink, Monitor, Smartphone, Tablet, Code, Rocket, Terminal, ChevronUp, ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
+import type { E2BEvent } from '../hooks/useWebSocket'
+import { EventLogger } from './PreviewPanel/EventLogger'
 
 interface PreviewPanelProps {
   url: string
   sandboxId?: string | null
   logs?: string[]
+  e2bEvents?: E2BEvent[]
+  isGenerating?: boolean
 }
 
 type ViewportSize = 'desktop' | 'tablet' | 'mobile'
 
-const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: PreviewPanelProps) => {
+const PreviewPanel = ({ url, e2bEvents = [], isGenerating: externalIsGenerating = false }: PreviewPanelProps) => {
   const [viewport, setViewport] = useState<ViewportSize>('desktop')
   const [isLoading, setIsLoading] = useState(false)
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(externalIsGenerating)
   const [loadingTip, setLoadingTip] = useState('')
   const [currentStep, setCurrentStep] = useState(0)
-  const [logs, setLogs] = useState<string[]>(initialLogs ||  [])
   const [showLogs, setShowLogs] = useState(false)
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const logsEndRef = useRef<HTMLDivElement>(null)
   
-  const generationSteps = [
+  const generationSteps = useMemo(() => [
     { name: "Planning", description: "Analyzing your requirements..." },
     { name: "Design", description: "Creating the visual structure..." },
     { name: "HTML", description: "Building the page structure..." },
@@ -30,9 +32,9 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
     { name: "Optimization", description: "Optimizing for performance..." },
     { name: "Testing", description: "Ensuring everything works..." },
     { name: "Finalizing", description: "Preparing for preview..." }
-  ]
-  
-  const loadingTips = [
+  ], [])
+
+  const loadingTips = useMemo(() => [
     "Crafting responsive layouts for all devices...",
     "Optimizing images for faster loading...",
     "Adding beautiful typography and spacing...",
@@ -43,12 +45,13 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
     "Ensuring cross-browser compatibility...",
     "Implementing color psychology for better UX...",
     "Adding micro-interactions for engagement..."
-  ]
+  ], [])
 
   const handleRefresh = () => {
     if (iframeRef.current) {
       setIsLoading(true)
-      iframeRef.current.src = iframeRef.current.src
+      const currentSrc = iframeRef.current.src
+      iframeRef.current.src = currentSrc
     }
   }
 
@@ -64,47 +67,44 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
   }
   
   useEffect(() => {
-    if (!url && _sandboxId) {
-      setIsGenerating(true)
-      setCurrentStep(0)
-      
+    setIsGenerating(externalIsGenerating)
+  }, [externalIsGenerating])
+
+  useEffect(() => {
+    if (!url && externalIsGenerating) {
       setLoadingTip(loadingTips[Math.floor(Math.random() * loadingTips.length)])
-      
+
       const tipInterval = setInterval(() => {
         setLoadingTip(loadingTips[Math.floor(Math.random() * loadingTips.length)])
       }, 3000)
-      
-      const stepInterval = setInterval(() => {
-        setCurrentStep(prev => { 
-          if (prev >= generationSteps.length - 1) {
-            return 0
-          }
-          return prev + 1
-        })
-      }, 2000)
-      
+
       return () => {
         clearInterval(tipInterval)
-        clearInterval(stepInterval)
       }
-    } else {
-      setIsGenerating(false)
-      setCurrentStep(0)
     }
-  }, [url, _sandboxId, loadingTips.length, generationSteps.length])
-  
+  }, [url, externalIsGenerating, loadingTips])
+
   useEffect(() => {
-    if (initialLogs && initialLogs.length > 0) {
-      setLogs(prev => [...prev, ...initialLogs])
-      setTimeout(() => {
-        logsEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-      }, 100)
+    if (e2bEvents.length > 0) {
+      const totalSteps = generationSteps.length
+      const eventTypeWeight: Record<string, number> = {
+        'sandbox:creating': 1,
+        'sandbox:created': 2,
+        'tool:executing': 0.3,
+        'tool:completed': 0.5,
+        'command:executing': 0.4,
+        'command:completed': 0.6
+      }
+
+      const progress = e2bEvents.reduce((acc, event) => {
+        return acc + (eventTypeWeight[event.type] || 0.1)
+      }, 0)
+
+      const calculatedStep = Math.min(Math.floor(progress), totalSteps - 1)
+      setCurrentStep(calculatedStep)
     }
-  }, [initialLogs])
+  }, [e2bEvents, generationSteps.length])
   
-  useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [logs.length])
 
   const getViewportStyles = () => {
     switch (viewport) {
@@ -207,11 +207,11 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
       <div className="flex-1 bg-card p-4 overflow-auto">
         {url ? (
           <div className={`h-full ${getViewportStyles()}`}>
-            <div 
+            <div
               className="bg-card backdrop-blur-sm shadow-lg rounded-lg overflow-hidden h-full"
               style={getViewportDimensions()}
             >
-              {isLoading && (
+              {(isLoading || isGenerating) && (
                 <div className="flex items-center justify-center h-full">
                   <div className="flex items-center space-x-2 text-muted-foreground">
                     <RefreshCw className="w-5 h-5 animate-spin" />
@@ -222,7 +222,7 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
               <iframe
                 ref={iframeRef}
                 src={url}
-                className="w-full h-full border-0"
+                className={`w-full h-full border-0 ${(isLoading || isGenerating) ? 'hidden' : ''}`}
                 onLoad={handleIframeLoad}
                 title="Website Preview"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -304,17 +304,8 @@ const PreviewPanel = ({ url, sandboxId: _sandboxId, logs: initialLogs }: Preview
 
               {showLogs && (
                 <div className="mt-4 border border-border rounded-lg bg-muted p-2">
-                  <div className="text-xs font-mono text-left h-40 overflow-y-auto bg-popover text-popover-foreground p-3 rounded">
-                    {logs.length === 0 ? (
-                      <p className="text-muted-foreground italic">Waiting for logs...</p>
-                    ) : (
-                      logs.map((log, index) => (
-                        <div key={index} className="whitespace-pre-wrap mb-1">
-                          <span className="text-foreground">$</span> {log}
-                        </div>
-                      ))
-                    )}
-                    <div ref={logsEndRef} />
+                  <div className="text-xs font-mono text-left h-40 overflow-y-auto bg-popover text-popover-foreground p-3 rounded space-y-1">
+                    <EventLogger events={e2bEvents} />
                   </div>
                 </div>
               )}

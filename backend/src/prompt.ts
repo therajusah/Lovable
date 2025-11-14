@@ -70,6 +70,8 @@ RULES:
 - ALWAYS use updateFile tool
 - Include CSS styling for a beautiful UI
 - Use Tailwind CSS classes or inline styles
+- ALWAYS keep UI elements centered on the page (use flexbox with justify-center and items-center)
+- Ensure the main container uses min-h-screen, flex, flex-col, justify-center, and items-center for proper centering
 - NO explanations or conversations
 - ONLY tool calls
 

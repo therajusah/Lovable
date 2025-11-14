@@ -1,19 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import ChatPanel from '../components/ChatPanel'
 import CodeEditor from '../components/CodeEditor'
 import PreviewPanel from '../components/PreviewPanel'
-import { Sun, Moon, Zap } from 'lucide-react'
+import { Sun, Moon } from 'lucide-react'
 import { apiService } from '../services/api'
 import type { Message, GenerationState } from '../types'
 import logowhite from '../assets/lovable-brand/logowhite.svg'
 import logoblack from '../assets/lovable-brand/logoblack.svg'
 import { motion, AnimatePresence } from 'framer-motion'
-
+import { useWebSocketContext } from '../hooks/useWebSocketContext'
 
 const Dashboard = () => {
   const location = useLocation()
+  const { sessionId, e2bEvents } = useWebSocketContext()
   const [messages, setMessages] = useState<Message[]>([])
   const [currentCode, setCurrentCode] = useState('')
   const [generationState, setGenerationState] = useState<GenerationState>({
@@ -28,6 +29,25 @@ const Dashboard = () => {
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
+    const lastEvent = e2bEvents[e2bEvents.length - 1]
+    if (lastEvent?.type === 'sandbox:created' && lastEvent.sandboxId && lastEvent.previewUrl) {
+      setGenerationState(prev => ({
+        ...prev,
+        currentSandboxId: lastEvent.sandboxId!,
+        currentPreviewUrl: lastEvent.previewUrl!
+      }))
+    }
+  }, [e2bEvents])
+
+
+  useEffect(() => {
+    if (e2bEvents.length > 0) {
+      const lastEvent = e2bEvents[e2bEvents.length - 1]
+      setBackendLogs(prev => [...prev, `[${new Date(lastEvent.timestamp).toLocaleTimeString()}] ${lastEvent.message}`])
+    }
+  }, [e2bEvents])
+
+  useEffect(() => {
     const checkTheme = () => {
       setIsDark(document.documentElement.classList.contains('dark'))
     }
@@ -37,44 +57,7 @@ const Dashboard = () => {
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    const checkBackendConnection = async () => {
-      const isConnected = await apiService.healthCheck()
-      setBackendConnected(isConnected)
-      
-      if (!isConnected) {
-        toast.error('Backend server is disconnected. Please start the backend server.')
-      }
-    }
-    
-    checkBackendConnection()
-
-    const initialPrompt = location.state?.initialPrompt
-    if (initialPrompt) {
-      const initialMessage: Message = {
-        id: '1',
-        content: initialPrompt,
-        role: 'user',
-        timestamp: new Date()
-      }
-      setMessages([initialMessage])
-      handleGenerateWebsite(initialPrompt)
-    }
-  }, [location.state])
-
-  const handleSendMessage = async (content: string) => {
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content,
-      role: 'user',
-      timestamp: new Date()
-    }
-    
-    setMessages(prev => [...prev, userMessage])
-    handleGenerateWebsite(content)
-  }
-
-  const handleGenerateWebsite = async (prompt: string) => {
+  const handleGenerateWebsite = useCallback(async (prompt: string) => {
     setGenerationState(prev => ({
       ...prev,
       isGenerating: true,
@@ -94,14 +77,14 @@ const Dashboard = () => {
     await apiService.generateWebsite(
       prompt,
       (chunk: string) => {
-        setMessages(prev => prev.map(msg => 
-          msg.id === aiMessageId 
+        setMessages(prev => prev.map(msg =>
+          msg.id === aiMessageId
             ? { ...msg, content: msg.content + chunk }
             : msg
         ))
-        
+
         setBackendLogs(prev => [...prev, chunk])
-      
+
         if (chunk.includes('Creating sandbox') || chunk.includes('Generating website')) {
           setActiveView('preview')
         }
@@ -113,17 +96,17 @@ const Dashboard = () => {
           currentSandboxId: result.sandboxId,
           currentPreviewUrl: result.previewUrl
         }))
-        
+
         setActiveView('preview')
-      
-        toast.success('Your website has been generated successfully!')
-        
-        setMessages(prev => prev.map(msg => 
-          msg.id === aiMessageId 
-            ? { 
-                ...msg, 
-                content: msg.content + '\n\nYour website is ready! You can now view it in the preview panel.',
-                isStreaming: false 
+
+        toast.success('Website generated!')
+
+        setMessages(prev => prev.map(msg =>
+          msg.id === aiMessageId
+            ? {
+                ...msg,
+                content: msg.content + 'Your website is ready! You can now view it in the preview panel.',
+                isStreaming: false
               }
             : msg
         ))
@@ -134,18 +117,56 @@ const Dashboard = () => {
           isGenerating: false,
           error
         }))
-        
-        toast.error(`Failed to generate website: ${error}`, {
+
+        toast.error(error, {
           duration: 5000,
         })
-        
-        setMessages(prev => prev.map(msg => 
-          msg.id === aiMessageId 
+
+        setMessages(prev => prev.map(msg =>
+          msg.id === aiMessageId
             ? { ...msg, isStreaming: false }
             : msg
         ))
-      }
+      },
+      sessionId
     )
+  }, [sessionId])
+
+  useEffect(() => {
+    const checkBackendConnection = async () => {
+      const isConnected = await apiService.healthCheck()
+      setBackendConnected(isConnected)
+
+      if (!isConnected) {
+        toast.error('Backend disconnected')
+      }
+    }
+
+    checkBackendConnection()
+
+    const initialPrompt = location.state?.initialPrompt
+    if (initialPrompt) {
+      const initialMessage: Message = {
+        id: '1',
+        content: initialPrompt,
+        role: 'user',
+        timestamp: new Date()
+      }
+      setMessages([initialMessage])
+      handleGenerateWebsite(initialPrompt)
+    }
+  }, [location.state, handleGenerateWebsite])
+
+  const handleSendMessage = async (content: string) => {
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content,
+      role: 'user',
+      timestamp: new Date()
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    handleGenerateWebsite(content)
   }
 
   return (
@@ -202,44 +223,6 @@ const Dashboard = () => {
               </motion.button>
             </div>
 
-            <AnimatePresence mode="wait">
-              {(() => {
-                const isWorking = generationState.isGenerating
-                const statusColor = backendConnected
-                  ? (isWorking ? 'bg-yellow-500' : 'bg-emerald-500')
-                  : 'bg-red-500'
-
-                const statusBg = backendConnected
-                  ? (isWorking ? 'bg-yellow-500/10 border-yellow-500/30' : 'bg-emerald-500/10 border-emerald-500/30')
-                  : 'bg-red-500/10 border-red-500/30'
-
-                const statusText = backendConnected
-                  ? (isWorking ? 'text-yellow-600 dark:text-yellow-400' : 'text-emerald-600 dark:text-emerald-400')
-                  : 'text-red-600 dark:text-red-400'
-
-                const statusLabel = backendConnected
-                  ? (isWorking ? 'Working...' : 'Connected')
-                  : 'Disconnected'
-
-                return (
-                  <motion.div
-                    key={statusLabel}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.8, opacity: 0 }}
-                    className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 ${statusBg} ${statusText} border backdrop-blur-sm`}
-                  >
-                    <motion.div
-                      className={`w-2 h-2 rounded-full ${statusColor}`}
-                      animate={isWorking ? { scale: [1, 1.3, 1], opacity: [1, 0.5, 1] } : {}}
-                      transition={isWorking ? { duration: 1.5, repeat: Infinity } : {}}
-                    />
-                    {isWorking && <Zap className="w-3 h-3" />}
-                    <span>{statusLabel}</span>
-                  </motion.div>
-                )
-              })()}
-            </AnimatePresence>
 
             <motion.button
               onClick={() => {
@@ -282,6 +265,7 @@ const Dashboard = () => {
             onSendMessage={handleSendMessage}
             isGenerating={generationState.isGenerating}
             backendConnected={backendConnected}
+            e2bEvents={e2bEvents}
           />
         </motion.div>
 
@@ -316,6 +300,8 @@ const Dashboard = () => {
                 url={generationState.currentPreviewUrl || ''}
                 sandboxId={generationState.currentSandboxId}
                 logs={backendLogs}
+                e2bEvents={e2bEvents}
+                isGenerating={generationState.isGenerating}
               />
             </motion.div>
           )}

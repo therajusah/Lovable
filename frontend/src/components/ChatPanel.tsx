@@ -2,15 +2,18 @@ import { useState, useRef, useEffect } from 'react'
 import { Bot, User, Loader, AlertCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Message } from '../types'
+import type { E2BEvent } from '../hooks/useWebSocket'
+import { E2BEventList } from './E2BEvents/E2BEventList'
 
 interface ChatPanelProps {
   messages: Message[]
   onSendMessage: (message: string) => void
   isGenerating: boolean
   backendConnected?: boolean
+  e2bEvents?: E2BEvent[]
 }
 
-const ChatPanel = ({ messages, onSendMessage, isGenerating, backendConnected }: ChatPanelProps) => {
+const ChatPanel = ({ messages, onSendMessage, isGenerating, backendConnected, e2bEvents = [] }: ChatPanelProps) => {
   const [input, setInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -20,7 +23,7 @@ const ChatPanel = ({ messages, onSendMessage, isGenerating, backendConnected }: 
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages])
+  }, [messages, e2bEvents])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -116,6 +119,8 @@ const ChatPanel = ({ messages, onSendMessage, isGenerating, backendConnected }: 
             ))}
           </AnimatePresence>
         )}
+
+        {isGenerating && <E2BEventList events={e2bEvents} maxVisible={5} />}
 
         <div ref={messagesEndRef} />
       </div>
